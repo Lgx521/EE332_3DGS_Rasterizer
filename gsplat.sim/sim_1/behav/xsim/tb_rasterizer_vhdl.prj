@@ -1,0 +1,9 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../src/alpha_blender.vhd" \
+"../../../../src/gaussian_lut.vhd" \
+"../../../../src/splat_rasterizer.vhd" \
+"../../../../sim/tb_rasterizer.vhd" \
+
+# Do not sort compile order
+nosort

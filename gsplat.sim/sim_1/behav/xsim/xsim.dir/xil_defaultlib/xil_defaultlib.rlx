@@ -1,0 +1,17 @@
+0.6
+2017.4
+Dec 15 2017
+21:07:18
+C:/Users/fcy/Desktop/数字系统设计/gsplat/sim/tb_rasterizer.vhd,1778570814,vhdl,,,,tb_rasterizer,,,,,,,,
+C:/Users/fcy/Desktop/数字系统设计/gsplat/sim/tb_top.vhd,1778569379,vhdl,,,,tb_top,,,,,,,,
+C:/Users/fcy/Desktop/数字系统设计/gsplat/sim/tb_vga.vhd,1778569436,vhdl,,,,tb_vga,,,,,,,,
+C:/Users/fcy/Desktop/数字系统设计/gsplat/src/alpha_blender.vhd,1778570311,vhdl,C:/Users/fcy/Desktop/数字系统设计/gsplat/sim/tb_rasterizer.vhd,,,alpha_blender,,,,,,,,
+C:/Users/fcy/Desktop/数字系统设计/gsplat/src/clk_gen.vhd,1778568777,vhdl,C:/Users/fcy/Desktop/数字系统设计/gsplat/src/top_gsplat.vhd,,,clk_gen,,,,,,,,
+C:/Users/fcy/Desktop/数字系统设计/gsplat/src/framebuffer.vhd,1778568821,vhdl,C:/Users/fcy/Desktop/数字系统设计/gsplat/src/top_gsplat.vhd,,,framebuffer,,,,,,,,
+C:/Users/fcy/Desktop/数字系统设计/gsplat/src/gaussian_lut.vhd,1778569351,vhdl,C:/Users/fcy/Desktop/数字系统设计/gsplat/sim/tb_rasterizer.vhd,,,gaussian_lut,,,,,,,,
+C:/Users/fcy/Desktop/数字系统设计/gsplat/src/render_controller.vhd,1778569100,vhdl,C:/Users/fcy/Desktop/数字系统设计/gsplat/src/top_gsplat.vhd,,,render_controller,,,,,,,,
+C:/Users/fcy/Desktop/数字系统设计/gsplat/src/splat_rasterizer.vhd,1778569550,vhdl,C:/Users/fcy/Desktop/数字系统设计/gsplat/sim/tb_rasterizer.vhd,,,splat_rasterizer,,,,,,,,
+C:/Users/fcy/Desktop/数字系统设计/gsplat/src/splat_rom.vhd,1778568909,vhdl,C:/Users/fcy/Desktop/数字系统设计/gsplat/src/top_gsplat.vhd,,,splat_rom,,,,,,,,
+C:/Users/fcy/Desktop/数字系统设计/gsplat/src/top_gsplat.vhd,1778569146,vhdl,C:/Users/fcy/Desktop/数字系统设计/gsplat/sim/tb_top.vhd,,,top_gsplat,,,,,,,,
+C:/Users/fcy/Desktop/数字系统设计/gsplat/src/vga_controller.vhd,1778568859,vhdl,C:/Users/fcy/Desktop/数字系统设计/gsplat/sim/tb_vga.vhd,,,vga_controller,,,,,,,,
+C:/Users/fcy/Desktop/数字系统设计/gsplat/src/vga_timing.vhd,1778570118,vhdl,C:/Users/fcy/Desktop/数字系统设计/gsplat/sim/tb_vga.vhd,,,vga_timing,,,,,,,,

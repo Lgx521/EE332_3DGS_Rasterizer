@@ -1,0 +1,16 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../src/alpha_blender.vhd" \
+"../../../../src/clk_gen.vhd" \
+"../../../../src/framebuffer.vhd" \
+"../../../../src/gaussian_lut.vhd" \
+"../../../../src/render_controller.vhd" \
+"../../../../src/splat_rasterizer.vhd" \
+"../../../../src/splat_rom.vhd" \
+"../../../../src/vga_timing.vhd" \
+"../../../../src/vga_controller.vhd" \
+"../../../../src/top_gsplat.vhd" \
+"../../../../sim/tb_top.vhd" \
+
+# Do not sort compile order
+nosort

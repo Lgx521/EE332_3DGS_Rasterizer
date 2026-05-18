@@ -1,0 +1,34 @@
+Vivado Simulator 2017.4
+Copyright 1986-1999, 2001-2016 Xilinx, Inc. All Rights Reserved.
+Running: D:/Xilinx/Vivado/2017.4/bin/unwrapped/win64.o/xelab.exe -wto 57ad9670931442ce8d935faac3ee031b --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot tb_top_behav xil_defaultlib.tb_top -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.numeric_std
+Compiling package unisim.vcomponents
+Compiling package ieee.std_logic_arith
+Compiling package ieee.std_logic_signed
+Compiling package ieee.vital_timing
+Compiling package ieee.vital_primitives
+Compiling package unisim.vpkg
+Compiling architecture mmcme2_adv_v of entity unisim.MMCME2_ADV [\MMCME2_ADV(clkfbout_mult_f=10.0...]
+Compiling architecture mmcme2_base_v of entity unisim.MMCME2_BASE [\MMCME2_BASE(clkfbout_mult_f=10....]
+Compiling architecture bufg_v of entity unisim.BUFG [bufg_default]
+Compiling architecture behavioral of entity xil_defaultlib.clk_gen [clk_gen_default]
+Compiling architecture behavioral of entity xil_defaultlib.vga_timing [vga_timing_default]
+Compiling architecture behavioral of entity xil_defaultlib.framebuffer [framebuffer_default]
+Compiling architecture behavioral of entity xil_defaultlib.vga_controller [vga_controller_default]
+Compiling architecture behavioral of entity xil_defaultlib.splat_rom [\splat_rom(num_splats=5)(1,15)\]
+Compiling architecture behavioral of entity xil_defaultlib.gaussian_lut [gaussian_lut_default]
+Compiling architecture behavioral of entity xil_defaultlib.splat_rasterizer [splat_rasterizer_default]
+Compiling architecture behavioral of entity xil_defaultlib.alpha_blender [alpha_blender_default]
+Compiling architecture behavioral of entity xil_defaultlib.render_controller [render_controller_default]
+Compiling architecture behavioral of entity xil_defaultlib.top_gsplat [top_gsplat_default]
+Compiling architecture behavioral of entity xil_defaultlib.tb_top
+Built simulation snapshot tb_top_behav

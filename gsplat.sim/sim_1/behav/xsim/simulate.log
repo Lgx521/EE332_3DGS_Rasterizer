@@ -1,0 +1,16 @@
+Vivado Simulator 2017.4
+Time resolution is 1 ps
+Note: Test 1: Red circle r=10 at (160,120)
+Time: 150 ns  Iteration: 0  Process: /tb_rasterizer/stim_proc  File: C:/Users/fcy/Desktop/数字系统设计/gsplat/sim/tb_rasterizer.vhd
+Note: Test 1 done. Pixels emitted: 317
+Time: 4785 ns  Iteration: 0  Process: /tb_rasterizer/stim_proc  File: C:/Users/fcy/Desktop/数字系统设计/gsplat/sim/tb_rasterizer.vhd
+Note: Test 2: Green circle r=10 at (170,125) overlapping
+Time: 4995 ns  Iteration: 0  Process: /tb_rasterizer/stim_proc  File: C:/Users/fcy/Desktop/数字系统设计/gsplat/sim/tb_rasterizer.vhd
+Note: Test 2 done. Pixels emitted: 317
+Time: 9635 ns  Iteration: 0  Process: /tb_rasterizer/stim_proc  File: C:/Users/fcy/Desktop/数字系统设计/gsplat/sim/tb_rasterizer.vhd
+Note: Test 3: Blue circle r=30 at (0,0) - boundary test
+Time: 9845 ns  Iteration: 0  Process: /tb_rasterizer/stim_proc  File: C:/Users/fcy/Desktop/数字系统设计/gsplat/sim/tb_rasterizer.vhd
+Note: Test 3 done. Pixels emitted: 736
+Time: 19685 ns  Iteration: 0  Process: /tb_rasterizer/stim_proc  File: C:/Users/fcy/Desktop/数字系统设计/gsplat/sim/tb_rasterizer.vhd
+Note: All tests passed.
+Time: 20185 ns  Iteration: 0  Process: /tb_rasterizer/stim_proc  File: C:/Users/fcy/Desktop/数字系统设计/gsplat/sim/tb_rasterizer.vhd
