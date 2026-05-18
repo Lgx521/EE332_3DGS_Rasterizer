@@ -214,9 +214,8 @@ def project_gaussians(gaussians, view, K, max_splats=5000):
         depth = -p_cam[2]
 
         # Project to screen
-        p_screen = K @ p_cam[:3]
-        cx = p_screen[0] / (-p_cam[2])
-        cy = p_screen[1] / (-p_cam[2])
+        cx = K[0, 0] * p_cam[0] / depth + K[0, 2]
+        cy = K[1, 1] * p_cam[1] / depth + K[1, 2]
 
         # Compute approximate radius from scale
         # Use max scale component, projected

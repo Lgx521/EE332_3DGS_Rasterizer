@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="synth_1" LaunchPart="xc7a100tcsg324-1" LaunchTime="1779079681">
+<GenRun Id="synth_1" LaunchPart="xc7a100tcsg324-1" LaunchTime="1779083208">
   <File Type="PA-TCL" Name="top_gsplat.tcl"/>
   <File Type="RDS-PROPCONSTRS" Name="top_gsplat_drc_synth.rpt"/>
   <File Type="REPORTS-TCL" Name="top_gsplat_reports.tcl"/>
@@ -20,7 +20,7 @@
     <File Path="$PSRCDIR/sources_1/imports/src/camera_controller.vhd">
       <FileInfo>
         <Attr Name="ImportPath" Val="$PPRDIR/src/camera_controller.vhd"/>
-        <Attr Name="ImportTime" Val="1779079546"/>
+        <Attr Name="ImportTime" Val="1779082485"/>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
@@ -103,6 +103,14 @@
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
+    <File Path="$PSRCDIR/sources_1/imports/mem/my_scene.mem">
+      <FileInfo>
+        <Attr Name="ImportPath" Val="$PPRDIR/mem/my_scene.mem"/>
+        <Attr Name="ImportTime" Val="1779082531"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
     <Config>
       <Option Name="DesignMode" Val="RTL"/>
       <Option Name="TopModule" Val="top_gsplat"/>
@@ -121,9 +129,7 @@
     </Config>
   </FileSet>
   <Strategy Version="1" Minor="2">
-    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2017">
-      <Desc>Vivado Synthesis Defaults</Desc>
-    </StratHandle>
+    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2017"/>
     <Step Id="synth_design"/>
   </Strategy>
 </GenRun>

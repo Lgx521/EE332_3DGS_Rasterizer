@@ -16,10 +16,6 @@ proc create_report { reportName command } {
     send_msg_id runtcl-5 warning "$msg"
   }
 }
-set_param xicom.use_bs_reader 1
-set_param synth.incrementalSynthesisCache {C:/Users/Vincent G/AppData/Roaming/Xilinx/Vivado/.Xil/Vivado-31280-GANSZ-DESKTOP/incrSyn}
-set_msg_config -id {Synth 8-256} -limit 10000
-set_msg_config -id {Synth 8-638} -limit 10000
 create_project -in_memory -part xc7a100tcsg324-1
 
 set_param project.singleFileAddWarning.threshold 0
@@ -36,6 +32,7 @@ read_mem {
   {C:/Users/Vincent G/Desktop/gsplat/mem/test_gradient.mem}
   {C:/Users/Vincent G/Desktop/gsplat/mem/test_overlap.mem}
   {C:/Users/Vincent G/Desktop/gsplat/mem/test_splats.mem}
+  {C:/Users/Vincent G/Desktop/gsplat/gsplat.srcs/sources_1/imports/mem/my_scene.mem}
 }
 read_vhdl -library xil_defaultlib {
   {C:/Users/Vincent G/Desktop/gsplat/src/alpha_blender.vhd}

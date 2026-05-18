@@ -32,6 +32,12 @@ entity splat_rasterizer is
         pan_x         : in  STD_LOGIC_VECTOR(10 downto 0);
         pan_y         : in  STD_LOGIC_VECTOR(10 downto 0);
 
+        -- Rotation parameters (from camera_controller, signed 8-bit scale-127)
+        mode          : in  STD_LOGIC;                    -- 0=pan, 1=rotate
+        sin_spin      : in  STD_LOGIC_VECTOR(7 downto 0);
+        cos_spin      : in  STD_LOGIC_VECTOR(7 downto 0);
+        cos_tilt      : in  STD_LOGIC_VECTOR(7 downto 0);
+
         -- LUT interface (1-cycle read latency)
         lut_d2_norm   : out STD_LOGIC_VECTOR(7 downto 0);
         lut_weight    : in  STD_LOGIC_VECTOR(7 downto 0);
@@ -133,12 +139,25 @@ begin
     busy <= '0' when state = S_IDLE else '1';
 
     process(clk, reset)
-        variable dx_v : signed(10 downto 0);
-        variable dy_v : signed(10 downto 0);
-        variable d2_v : unsigned(19 downto 0);
-        variable d2_norm_v : unsigned(35 downto 0);
-        variable d2_norm_8 : unsigned(7 downto 0);
+        variable dx_v        : signed(10 downto 0);
+        variable dy_v        : signed(10 downto 0);
+        variable d2_v        : unsigned(19 downto 0);
+        variable d2_norm_v   : unsigned(35 downto 0);
+        variable d2_norm_8   : unsigned(7 downto 0);
         variable eff_alpha_v : unsigned(15 downto 0);
+        -- Rotation transform temporaries
+        variable cx_raw_v    : signed(10 downto 0);
+        variable cy_raw_v    : signed(10 downto 0);
+        variable cx_c_v      : signed(10 downto 0);
+        variable cy_c_v      : signed(10 downto 0);
+        variable tilt_prod_v : signed(18 downto 0);  -- 11-bit * 8-bit = 19-bit
+        variable cy_tilt_v   : signed(10 downto 0);
+        variable prod_ax_v   : signed(18 downto 0);
+        variable prod_bx_v   : signed(18 downto 0);
+        variable prod_ay_v   : signed(18 downto 0);
+        variable prod_by_v   : signed(18 downto 0);
+        variable cx_sum_v    : signed(10 downto 0);
+        variable cy_sum_v    : signed(10 downto 0);
     begin
         if reset = '1' then
             state     <= S_IDLE;
@@ -233,15 +252,37 @@ begin
                     end if;
 
                 when S_LOAD =>
-                    -- Decode splat parameters with viewport pan offset applied
-                    cx      <= signed(resize(unsigned(splat_data(63 downto 54)), 11)) + signed(pan_x);
-                    cy      <= signed(resize(unsigned(splat_data(53 downto 45)), 11)) + signed(pan_y);
+                    -- Decode common splat parameters
                     radius  <= unsigned(splat_data(44 downto 38));
                     s_r     <= splat_data(37 downto 34);
                     s_g     <= splat_data(33 downto 30);
                     s_b     <= splat_data(29 downto 26);
                     s_alpha <= unsigned(splat_data(25 downto 18));
-                    state <= S_CALC_BBOX;
+                    state   <= S_CALC_BBOX;
+                    -- Decode raw centre position
+                    cx_raw_v := signed(resize(unsigned(splat_data(63 downto 54)), 11));
+                    cy_raw_v := signed(resize(unsigned(splat_data(53 downto 45)), 11));
+                    if mode = '0' then
+                        -- Pan mode: simple viewport offset
+                        cx <= cx_raw_v + signed(pan_x);
+                        cy <= cy_raw_v + signed(pan_y);
+                    else
+                        -- Rotate mode: tilt (Y-scale) then in-plane spin around (160,120)
+                        cx_c_v      := cx_raw_v - to_signed(160, 11);
+                        cy_c_v      := cy_raw_v - to_signed(120, 11);
+                        -- Tilt: scale cy by cos_tilt  (scale factor 127, right-shift 7)
+                        tilt_prod_v := cy_c_v * signed(cos_tilt);
+                        cy_tilt_v   := tilt_prod_v(17 downto 7);
+                        -- 2-D rotation matrix
+                        prod_ax_v   := cx_c_v   * signed(cos_spin);
+                        prod_bx_v   := cy_tilt_v * signed(sin_spin);
+                        prod_ay_v   := cx_c_v   * signed(sin_spin);
+                        prod_by_v   := cy_tilt_v * signed(cos_spin);
+                        cx_sum_v    := prod_ax_v(17 downto 7) - prod_bx_v(17 downto 7);
+                        cy_sum_v    := prod_ay_v(17 downto 7) + prod_by_v(17 downto 7);
+                        cx          <= cx_sum_v + to_signed(160, 11);
+                        cy          <= cy_sum_v + to_signed(120, 11);
+                    end if;
 
                 when S_CALC_BBOX =>
                     -- Compute bounding box clamped to screen

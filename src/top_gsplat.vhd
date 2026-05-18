@@ -101,9 +101,13 @@ architecture Behavioral of top_gsplat is
     signal frame_start_sync : std_logic_vector(2 downto 0) := "000";
     signal frame_trigger    : std_logic;
 
-    -- Viewport pan offset from camera_controller
-    signal pan_x : std_logic_vector(10 downto 0);
-    signal pan_y : std_logic_vector(10 downto 0);
+    -- Camera controller outputs
+    signal pan_x     : std_logic_vector(10 downto 0);
+    signal pan_y     : std_logic_vector(10 downto 0);
+    signal ctrl_mode : std_logic;
+    signal sin_spin  : std_logic_vector(7 downto 0);
+    signal cos_spin  : std_logic_vector(7 downto 0);
+    signal cos_tilt  : std_logic_vector(7 downto 0);
 
 begin
 
@@ -211,7 +215,7 @@ begin
     u_splat_rom : entity work.splat_rom
     generic map (
         NUM_SPLATS => 5,
-        MEM_FILE   => "test_splats.mem"
+        MEM_FILE   => "cactus.mem"
     )
     port map (
         clk        => clk_sys,
@@ -242,9 +246,14 @@ begin
         btn_l      => BTNL,
         btn_r      => BTNR,
         btn_c      => BTNC,
+        mode_sel   => SW(0),
         frame_tick => frame_trigger,
+        mode       => ctrl_mode,
         pan_x      => pan_x,
-        pan_y      => pan_y
+        pan_y      => pan_y,
+        sin_spin   => sin_spin,
+        cos_spin   => cos_spin,
+        cos_tilt   => cos_tilt
     );
 
     --=========================================================================
@@ -260,6 +269,10 @@ begin
         splat_data   => rc_rast_splat,
         pan_x        => pan_x,
         pan_y        => pan_y,
+        mode         => ctrl_mode,
+        sin_spin     => sin_spin,
+        cos_spin     => cos_spin,
+        cos_tilt     => cos_tilt,
         lut_d2_norm  => lut_d2_norm,
         lut_weight   => lut_weight,
         px_valid     => rast_px_valid,
