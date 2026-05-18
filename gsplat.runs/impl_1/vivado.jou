@@ -9,3 +9,4 @@
 # Log file: C:/Users/Vincent G/Desktop/gsplat/gsplat.runs/impl_1/top_gsplat.vdi
 # Journal file: C:/Users/Vincent G/Desktop/gsplat/gsplat.runs/impl_1\vivado.jou
 #-----------------------------------------------------------
+source top_gsplat.tcl -notrace

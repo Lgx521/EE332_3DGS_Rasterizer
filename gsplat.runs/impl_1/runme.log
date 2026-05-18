@@ -401,3 +401,121 @@ Phase 5.1.1 Update Timing | Checksum: 146284c34
 Time (s): cpu = 00:00:25 ; elapsed = 00:00:20 . Memory (MB): peak = 1437.340 ; gain = 0.000
 INFO: [Route 35-416] Intermediate Timing Summary | WNS=-4.102 | TNS=-194.127| WHS=N/A    | THS=N/A    |
 
+ Number of Nodes with overlaps = 0
+Phase 5.1 Delay CleanUp | Checksum: 15b7119e1
+
+Time (s): cpu = 00:00:29 ; elapsed = 00:00:22 . Memory (MB): peak = 1443.660 ; gain = 6.320
+
+Phase 5.2 Clock Skew Optimization
+Phase 5.2 Clock Skew Optimization | Checksum: 15b7119e1
+
+Time (s): cpu = 00:00:29 ; elapsed = 00:00:22 . Memory (MB): peak = 1443.660 ; gain = 6.320
+Phase 5 Delay and Skew Optimization | Checksum: 15b7119e1
+
+Time (s): cpu = 00:00:29 ; elapsed = 00:00:22 . Memory (MB): peak = 1443.660 ; gain = 6.320
+
+Phase 6 Post Hold Fix
+
+Phase 6.1 Hold Fix Iter
+
+Phase 6.1.1 Update Timing
+Phase 6.1.1 Update Timing | Checksum: f9f457d1
+
+Time (s): cpu = 00:00:29 ; elapsed = 00:00:22 . Memory (MB): peak = 1443.660 ; gain = 6.320
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-3.986 | TNS=-163.727| WHS=0.015  | THS=0.000  |
+
+Phase 6.1 Hold Fix Iter | Checksum: 16987766b
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:22 . Memory (MB): peak = 1443.660 ; gain = 6.320
+Phase 6 Post Hold Fix | Checksum: 16987766b
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:22 . Memory (MB): peak = 1443.660 ; gain = 6.320
+
+Phase 7 Route finalize
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 0.927319 %
+  Global Horizontal Routing Utilization  = 0.705172 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 0
+  Number of Unrouted Nets             = 0
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+Utilization threshold used for congestion level computation: 0.85
+Congestion Report
+North Dir 1x1 Area, Max Cong = 36.036%, No Congested Regions.
+South Dir 1x1 Area, Max Cong = 47.7477%, No Congested Regions.
+East Dir 1x1 Area, Max Cong = 41.1765%, No Congested Regions.
+West Dir 1x1 Area, Max Cong = 44.1176%, No Congested Regions.
+Phase 7 Route finalize | Checksum: 1c7db26ca
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:22 . Memory (MB): peak = 1443.660 ; gain = 6.320
+
+Phase 8 Verifying routed nets
+
+ Verification completed successfully
+Phase 8 Verifying routed nets | Checksum: 1c7db26ca
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:22 . Memory (MB): peak = 1443.660 ; gain = 6.320
+
+Phase 9 Depositing Routes
+Phase 9 Depositing Routes | Checksum: 14a6da354
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:23 . Memory (MB): peak = 1443.660 ; gain = 6.320
+
+Phase 10 Post Router Timing
+INFO: [Route 35-57] Estimated Timing Summary | WNS=-3.986 | TNS=-163.727| WHS=0.015  | THS=0.000  |
+
+WARNING: [Route 35-328] Router estimated timing not met.
+Resolution: For a complete and accurate timing signoff, report_timing_summary must be run after route_design. Alternatively, route_design can be run with the -timing_summary option to enable a complete timing signoff at the end of route_design.
+Phase 10 Post Router Timing | Checksum: 14a6da354
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:23 . Memory (MB): peak = 1443.660 ; gain = 6.320
+INFO: [Route 35-16] Router Completed Successfully
+
+Time (s): cpu = 00:00:30 ; elapsed = 00:00:23 . Memory (MB): peak = 1443.660 ; gain = 6.320
+
+Routing Is Done.
+INFO: [Common 17-83] Releasing license: Implementation
+70 Infos, 23 Warnings, 0 Critical Warnings and 0 Errors encountered.
+route_design completed successfully
+route_design: Time (s): cpu = 00:00:31 ; elapsed = 00:00:23 . Memory (MB): peak = 1443.660 ; gain = 6.320
+Writing placer database...
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Write XDEF Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.263 . Memory (MB): peak = 1443.660 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'C:/Users/Vincent G/Desktop/gsplat/gsplat.runs/impl_1/top_gsplat_routed.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_drc -file top_gsplat_drc_routed.rpt -pb top_gsplat_drc_routed.pb -rpx top_gsplat_drc_routed.rpx
+Command: report_drc -file top_gsplat_drc_routed.rpt -pb top_gsplat_drc_routed.pb -rpx top_gsplat_drc_routed.rpx
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 2 threads
+INFO: [Coretcl 2-168] The results of DRC are in file C:/Users/Vincent G/Desktop/gsplat/gsplat.runs/impl_1/top_gsplat_drc_routed.rpt.
+report_drc completed successfully
+INFO: [runtcl-4] Executing : report_methodology -file top_gsplat_methodology_drc_routed.rpt -pb top_gsplat_methodology_drc_routed.pb -rpx top_gsplat_methodology_drc_routed.rpx
+Command: report_methodology -file top_gsplat_methodology_drc_routed.rpt -pb top_gsplat_methodology_drc_routed.pb -rpx top_gsplat_methodology_drc_routed.rpx
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [DRC 23-133] Running Methodology with 2 threads
+INFO: [Coretcl 2-1520] The results of Report Methodology are in file C:/Users/Vincent G/Desktop/gsplat/gsplat.runs/impl_1/top_gsplat_methodology_drc_routed.rpt.
+report_methodology completed successfully
+INFO: [runtcl-4] Executing : report_power -file top_gsplat_power_routed.rpt -pb top_gsplat_power_summary_routed.pb -rpx top_gsplat_power_routed.rpx
+Command: report_power -file top_gsplat_power_routed.rpt -pb top_gsplat_power_summary_routed.pb -rpx top_gsplat_power_routed.rpx
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Running Vector-less Activity Propagation...
+
+Finished Running Vector-less Activity Propagation
+82 Infos, 23 Warnings, 0 Critical Warnings and 0 Errors encountered.
+report_power completed successfully
+INFO: [runtcl-4] Executing : report_route_status -file top_gsplat_route_status.rpt -pb top_gsplat_route_status.pb
+INFO: [runtcl-4] Executing : report_timing_summary -max_paths 10 -file top_gsplat_timing_summary_routed.rpt -rpx top_gsplat_timing_summary_routed.rpx -warn_on_violation 
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+CRITICAL WARNING: [Timing 38-282] The design failed to meet the timing requirements. Please see the timing summary report for details on the timing violations.
+INFO: [runtcl-4] Executing : report_incremental_reuse -file top_gsplat_incremental_reuse_routed.rpt
+INFO: [Vivado_Tcl 4-545] No incremental reuse to report, no incremental placement and routing data was found.
+INFO: [runtcl-4] Executing : report_clock_utilization -file top_gsplat_clock_utilization_routed.rpt
+INFO: [Common 17-206] Exiting Vivado at Mon May 18 13:48:35 2026...
