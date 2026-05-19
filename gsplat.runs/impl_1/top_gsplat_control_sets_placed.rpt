@@ -1,7 +1,7 @@
 Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2017.4 (win64) Build 2086221 Fri Dec 15 20:55:39 MST 2017
-| Date         : Mon May 18 13:48:08 2026
+| Date         : Mon May 18 16:44:05 2026
 | Host         : GANSZ-DESKTOP running 64-bit major release  (build 9200)
 | Command      : report_control_sets -verbose -file top_gsplat_control_sets_placed.rpt
 | Design       : top_gsplat
@@ -23,7 +23,7 @@ Table of Contents
 |                          Status                          | Count |
 +----------------------------------------------------------+-------+
 | Number of unique control sets                            |    33 |
-| Unused register locations in slices containing registers |   126 |
+| Unused register locations in slices containing registers |   140 |
 +----------------------------------------------------------+-------+
 
 
@@ -34,67 +34,66 @@ Table of Contents
 | Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
 +--------------+-----------------------+------------------------+-----------------+--------------+
 | No           | No                    | No                     |              17 |           12 |
-| No           | No                    | Yes                    |              31 |           20 |
-| No           | Yes                   | No                     |              23 |           10 |
-| Yes          | No                    | No                     |             353 |          167 |
-| Yes          | No                    | Yes                    |              44 |           13 |
-| Yes          | Yes                   | No                     |             174 |           53 |
+| No           | No                    | Yes                    |              31 |           19 |
+| No           | Yes                   | No                     |              23 |            9 |
+| Yes          | No                    | No                     |             347 |          146 |
+| Yes          | No                    | Yes                    |              44 |           14 |
+| Yes          | Yes                   | No                     |             182 |           57 |
 +--------------+-----------------------+------------------------+-----------------+--------------+
 
 
 3. Detailed Control Set Information
 -----------------------------------
 
-+----------------------+-----------------------------------------------+-------------------------------------+------------------+----------------+
-|     Clock Signal     |                 Enable Signal                 |           Set/Reset Signal          | Slice Load Count | Bel Load Count |
-+----------------------+-----------------------------------------------+-------------------------------------+------------------+----------------+
-|  CLK100MHZ_IBUF_BUFG | u_render_ctrl/FSM_sequential_state[3]_i_1_n_0 | reset_sys                           |                1 |              4 |
-|  CLK100MHZ_IBUF_BUFG | u_rasterizer/x_min0                           | u_rasterizer/x_max[8]_i_1_n_0       |                2 |              7 |
-|  CLK100MHZ_IBUF_BUFG | u_rasterizer/x_min0                           | u_rasterizer/x_min[8]_i_1_n_0       |                2 |              7 |
-|  CLK100MHZ_IBUF_BUFG | u_rasterizer/x_min0                           | u_rasterizer/y_min[7]_i_1_n_0       |                2 |              7 |
-|  CLK100MHZ_IBUF_BUFG | u_rasterizer/x_min0                           | u_rasterizer/y_max[7]_i_1_n_0       |                2 |              7 |
-|  u_clk_gen/clk_pix   |                                               |                                     |                5 |              8 |
-|  CLK100MHZ_IBUF_BUFG | u_rasterizer/lut_d2_norm0__0                  | u_rasterizer/lut_d2_norm[7]_i_1_n_0 |                3 |              8 |
-|  u_clk_gen/clk_pix   |                                               | reset_pix                           |                5 |             10 |
-|  u_clk_gen/clk_pix   | u_vga_timing/v_cnt                            | reset_pix                           |                2 |             10 |
-|  CLK100MHZ_IBUF_BUFG |                                               |                                     |                9 |             11 |
-|  CLK100MHZ_IBUF_BUFG | u_rasterizer/cur_x0                           |                                     |                4 |             11 |
-|  CLK100MHZ_IBUF_BUFG | u_rasterizer/cur_y0                           |                                     |                4 |             11 |
-|  CLK100MHZ_IBUF_BUFG | u_blender/fb_din[11]_i_1_n_0                  |                                     |               10 |             12 |
-|  CLK100MHZ_IBUF_BUFG | u_render_ctrl/rast_splat_reg[44]_0            |                                     |                9 |             12 |
-|  CLK100MHZ_IBUF_BUFG | u_render_ctrl/splat_idx[12]_i_1_n_0           | reset_sys                           |                4 |             13 |
-|  CLK100MHZ_IBUF_BUFG | u_render_ctrl/splat_addr[12]_i_1_n_0          |                                     |                5 |             13 |
-|  CLK100MHZ_IBUF_BUFG | u_cam_ctrl/tilt_angle_rep[7]_i_1_n_0          | u_cam_ctrl/tilt_angle               |                9 |             16 |
-|  CLK100MHZ_IBUF_BUFG | u_render_ctrl/clear_addr_cnt[16]_i_1_n_0      | reset_sys                           |                6 |             17 |
-|  CLK100MHZ_IBUF_BUFG | u_blender/fb_addr[16]_i_1_n_0                 |                                     |                7 |             17 |
-|  CLK100MHZ_IBUF_BUFG | u_rasterizer/lut_d2_norm0__0                  |                                     |                6 |             17 |
-|  CLK100MHZ_IBUF_BUFG | u_rasterizer/p3_x[8]_i_1_n_0                  |                                     |                6 |             17 |
-|  CLK100MHZ_IBUF_BUFG | u_rasterizer/p1_x0                            |                                     |                4 |             17 |
-|  CLK100MHZ_IBUF_BUFG | u_render_ctrl/fb_clear_addr[16]_i_1_n_0       |                                     |                7 |             18 |
-|  CLK100MHZ_IBUF_BUFG | u_cam_ctrl/reg_pan_x                          | u_cam_ctrl/reg_pan_y                |                8 |             18 |
-|  CLK100MHZ_IBUF_BUFG | u_rasterizer/x_min0                           |                                     |                8 |             19 |
-|  CLK100MHZ_IBUF_BUFG | u_cam_ctrl/spin_angle                         | u_cam_ctrl/tilt_angle               |                7 |             24 |
-|  CLK100MHZ_IBUF_BUFG | u_blender/s2_addr[16]_i_1_n_0                 |                                     |               12 |             29 |
-|  CLK100MHZ_IBUF_BUFG | u_rasterizer/px_x0                            |                                     |               23 |             37 |
-|  CLK100MHZ_IBUF_BUFG | u_blender/s1_addr[16]_i_1_n_0                 |                                     |               20 |             37 |
-|  CLK100MHZ_IBUF_BUFG | u_rasterizer/E[0]                             |                                     |               18 |             37 |
-|  CLK100MHZ_IBUF_BUFG |                                               | reset_sys                           |               25 |             44 |
-|  CLK100MHZ_IBUF_BUFG | u_rasterizer/radius0                          |                                     |               24 |             49 |
-|  CLK100MHZ_IBUF_BUFG | u_cam_ctrl/sample_tick_reg_n_0                | reset_sys                           |               18 |             80 |
-+----------------------+-----------------------------------------------+-------------------------------------+------------------+----------------+
++----------------------+-----------------------------------------------+--------------------------------------+------------------+----------------+
+|     Clock Signal     |                 Enable Signal                 |           Set/Reset Signal           | Slice Load Count | Bel Load Count |
++----------------------+-----------------------------------------------+--------------------------------------+------------------+----------------+
+|  CLK100MHZ_IBUF_BUFG | u_render_ctrl/FSM_sequential_state[3]_i_1_n_0 | reset_sys                            |                1 |              4 |
+|  u_clk_gen/clk_pix   |                                               |                                      |                5 |              8 |
+|  CLK100MHZ_IBUF_BUFG | u_rasterizer/lut_d2_norm[7]_i_2_n_0           | u_rasterizer/lut_d2_norm[7]_i_1_n_0  |                2 |              8 |
+|  CLK100MHZ_IBUF_BUFG | u_cam_ctrl/tilt_angle_0                       | u_cam_ctrl/spin_angle_rep[7]_i_1_n_0 |                6 |              8 |
+|  u_clk_gen/clk_pix   |                                               | reset_pix                            |                5 |             10 |
+|  u_clk_gen/clk_pix   | u_vga_timing/v_cnt                            | reset_pix                            |                3 |             10 |
+|  CLK100MHZ_IBUF_BUFG |                                               |                                      |                9 |             11 |
+|  CLK100MHZ_IBUF_BUFG | u_rasterizer/cur_y[10]_i_1_n_0                |                                      |                5 |             11 |
+|  CLK100MHZ_IBUF_BUFG | u_rasterizer/cur_x[10]_i_1_n_0                |                                      |                6 |             11 |
+|  CLK100MHZ_IBUF_BUFG | u_rasterizer/y_max[10]_i_2_n_0                | u_rasterizer/y_max[10]_i_1_n_0       |                3 |             11 |
+|  CLK100MHZ_IBUF_BUFG | u_rasterizer/y_max[10]_i_2_n_0                | u_rasterizer/y_min[10]_i_1_n_0       |                3 |             11 |
+|  CLK100MHZ_IBUF_BUFG | u_rasterizer/y_max[10]_i_2_n_0                | u_rasterizer/x_min[10]_i_1_n_0       |                3 |             11 |
+|  CLK100MHZ_IBUF_BUFG | u_rasterizer/y_max[10]_i_2_n_0                | u_rasterizer/x_max[10]_i_1_n_0       |                4 |             11 |
+|  CLK100MHZ_IBUF_BUFG | u_render_ctrl/rast_splat_reg[44]_0            |                                      |                6 |             12 |
+|  CLK100MHZ_IBUF_BUFG | u_blender/fb_din[11]_i_1_n_0                  |                                      |                5 |             12 |
+|  CLK100MHZ_IBUF_BUFG | u_rasterizer/y_max[10]_i_2_n_0                |                                      |                6 |             13 |
+|  CLK100MHZ_IBUF_BUFG | u_render_ctrl/splat_addr[12]_i_1_n_0          |                                      |                4 |             13 |
+|  CLK100MHZ_IBUF_BUFG | u_render_ctrl/splat_idx[12]_i_1_n_0           | reset_sys                            |                5 |             13 |
+|  CLK100MHZ_IBUF_BUFG | u_render_ctrl/clear_addr_cnt[16]_i_1_n_0      | reset_sys                            |                5 |             17 |
+|  CLK100MHZ_IBUF_BUFG | u_blender/fb_addr[16]_i_1_n_0                 |                                      |                5 |             17 |
+|  CLK100MHZ_IBUF_BUFG | u_rasterizer/lut_d2_norm[7]_i_2_n_0           |                                      |                5 |             17 |
+|  CLK100MHZ_IBUF_BUFG | u_rasterizer/p1_x0                            |                                      |                4 |             17 |
+|  CLK100MHZ_IBUF_BUFG | u_rasterizer/p3_x[8]_i_1_n_0                  |                                      |                6 |             17 |
+|  CLK100MHZ_IBUF_BUFG | u_cam_ctrl/reg_pan_x[10]_i_2_n_0              | u_cam_ctrl/reg_pan_y                 |                7 |             18 |
+|  CLK100MHZ_IBUF_BUFG | u_render_ctrl/fb_clear_addr[16]_i_1_n_0       |                                      |                6 |             18 |
+|  CLK100MHZ_IBUF_BUFG | u_cam_ctrl/spin_angle_rep[7]_i_2_n_0          | u_cam_ctrl/spin_angle_rep[7]_i_1_n_0 |                8 |             24 |
+|  CLK100MHZ_IBUF_BUFG | u_blender/s2_addr[16]_i_1_n_0                 |                                      |                8 |             29 |
+|  CLK100MHZ_IBUF_BUFG | u_blender/s1_addr[16]_i_1_n_0                 |                                      |               13 |             37 |
+|  CLK100MHZ_IBUF_BUFG | u_rasterizer/px_x[8]_i_1_n_0                  |                                      |               18 |             37 |
+|  CLK100MHZ_IBUF_BUFG | u_rasterizer/E[0]                             |                                      |               17 |             37 |
+|  CLK100MHZ_IBUF_BUFG |                                               | reset_sys                            |               23 |             44 |
+|  CLK100MHZ_IBUF_BUFG | u_rasterizer/radius[6]_i_1_n_0                |                                      |               32 |             49 |
+|  CLK100MHZ_IBUF_BUFG | u_cam_ctrl/sample_tick_reg_n_0                | reset_sys                            |               21 |             80 |
++----------------------+-----------------------------------------------+--------------------------------------+------------------+----------------+
 
 
 +--------+-----------------------+
 | Fanout | Number of ControlSets |
 +--------+-----------------------+
 | 4      |                     1 |
-| 7      |                     4 |
-| 8      |                     2 |
+| 8      |                     3 |
 | 10     |                     2 |
-| 11     |                     3 |
+| 11     |                     7 |
 | 12     |                     2 |
-| 13     |                     2 |
-| 16+    |                    17 |
+| 13     |                     3 |
+| 16+    |                    15 |
 +--------+-----------------------+
 
 

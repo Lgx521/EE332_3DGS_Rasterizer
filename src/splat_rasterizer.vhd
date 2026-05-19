@@ -150,7 +150,7 @@ begin
         variable cy_raw_v    : signed(10 downto 0);
         variable cx_c_v      : signed(10 downto 0);
         variable cy_c_v      : signed(10 downto 0);
-        variable tilt_prod_v : signed(18 downto 0);  -- 11-bit * 8-bit = 19-bit
+        variable tilt_prod_v : signed(19 downto 0);  -- 11-bit * 9-bit = 20-bit (unsigned cos_tilt zero-extended)
         variable cy_tilt_v   : signed(10 downto 0);
         variable prod_ax_v   : signed(18 downto 0);
         variable prod_bx_v   : signed(18 downto 0);
@@ -252,8 +252,12 @@ begin
                     end if;
 
                 when S_LOAD =>
-                    -- Decode common splat parameters
-                    radius  <= unsigned(splat_data(44 downto 38));
+                    -- Decode common splat parameters (clamp radius to minimum 3 for visibility)
+                    if unsigned(splat_data(44 downto 38)) >= 3 then
+                        radius <= unsigned(splat_data(44 downto 38));
+                    else
+                        radius <= to_unsigned(3, 7);
+                    end if;
                     s_r     <= splat_data(37 downto 34);
                     s_g     <= splat_data(33 downto 30);
                     s_b     <= splat_data(29 downto 26);
@@ -270,8 +274,8 @@ begin
                         -- Rotate mode: tilt (Y-scale) then in-plane spin around (160,120)
                         cx_c_v      := cx_raw_v - to_signed(160, 11);
                         cy_c_v      := cy_raw_v - to_signed(120, 11);
-                        -- Tilt: scale cy by cos_tilt  (scale factor 127, right-shift 7)
-                        tilt_prod_v := cy_c_v * signed(cos_tilt);
+                        -- Tilt: scale cy by cos_tilt  (scale 128, identity=128 exact, right-shift 7)
+                        tilt_prod_v := cy_c_v * signed('0' & cos_tilt);  -- zero-extend unsigned
                         cy_tilt_v   := tilt_prod_v(17 downto 7);
                         -- 2-D rotation matrix
                         prod_ax_v   := cx_c_v   * signed(cos_spin);
@@ -280,8 +284,8 @@ begin
                         prod_by_v   := cy_tilt_v * signed(cos_spin);
                         cx_sum_v    := prod_ax_v(17 downto 7) - prod_bx_v(17 downto 7);
                         cy_sum_v    := prod_ay_v(17 downto 7) + prod_by_v(17 downto 7);
-                        cx          <= cx_sum_v + to_signed(160, 11);
-                        cy          <= cy_sum_v + to_signed(120, 11);
+                        cx          <= cx_sum_v + to_signed(160, 11) + signed(pan_x);
+                        cy          <= cy_sum_v + to_signed(120, 11) + signed(pan_y);
                     end if;
 
                 when S_CALC_BBOX =>

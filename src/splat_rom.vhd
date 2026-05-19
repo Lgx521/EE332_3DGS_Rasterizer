@@ -15,6 +15,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 use STD.TEXTIO.ALL;
+use IEEE.STD_LOGIC_TEXTIO.ALL;
 
 entity splat_rom is
     Generic (
@@ -35,39 +36,29 @@ architecture Behavioral of splat_rom is
 
     type rom_type is array (0 to ROM_DEPTH - 1) of std_logic_vector(63 downto 0);
 
-    -- Function to initialize ROM from a hex memory file
-    -- For synthesis, use attribute to point to .mem file
-    -- For simulation/initial testing, provide default test data
-    function init_rom return rom_type is
-        variable rom_v : rom_type := (others => (others => '0'));
+    -- Reads a hex .mem file at elaboration time (synthesis and simulation).
+    -- Vivado synthesis working dir = <project>.runs/synth_1/
+    -- so MEM_FILE should be "../../mem/<scene>.mem" relative to that.
+    impure function init_rom_hex(filename : string) return rom_type is
+        file   f   : text open read_mode is filename;
+        variable ln  : line;
+        variable val : std_logic_vector(63 downto 0);
+        variable mem : rom_type := (others => (others => '0'));
+        variable idx : integer  := 0;
     begin
-        -- Default test splats (overridden by .mem file in synthesis)
-        -- Splat 0: Red circle at (160, 120), radius=30, R=15, G=0, B=0, alpha=200
-        -- center_x=160 (0xA0), center_y=120 (0x78), radius=30 (0x1E)
-        -- R=15, G=0, B=0, alpha=200 (0xC8)
-        rom_v(0) := "0010100000" & "001111000" & "0011110" & "1111" & "0000" & "0000" & "11001000" & "000000000000000000";
-
-        -- Splat 1: Green circle at (100, 80), radius=25, R=0, G=15, B=0, alpha=180
-        rom_v(1) := "0001100100" & "001010000" & "0011001" & "0000" & "1111" & "0000" & "10110100" & "000000000000000000";
-
-        -- Splat 2: Blue circle at (220, 160), radius=35, R=0, G=0, B=15, alpha=160
-        rom_v(2) := "0011011100" & "010100000" & "0100011" & "0000" & "0000" & "1111" & "10100000" & "000000000000000000";
-
-        -- Splat 3: Yellow circle at (140, 180), radius=20, R=15, G=15, B=0, alpha=150
-        rom_v(3) := "0010001100" & "010110100" & "0010100" & "1111" & "1111" & "0000" & "10010110" & "000000000000000000";
-
-        -- Splat 4: White circle at (200, 60), radius=15, R=15, G=15, B=15, alpha=220
-        rom_v(4) := "0011001000" & "000111100" & "0001111" & "1111" & "1111" & "1111" & "11011100" & "000000000000000000";
-
-        return rom_v;
+        while (not endfile(f)) and (idx < ROM_DEPTH) loop
+            readline(f, ln);
+            if ln'length >= 16 then
+                hread(ln, val);
+                mem(idx) := val;
+                idx := idx + 1;
+            end if;
+        end loop;
+        return mem;
     end function;
 
-    signal rom : rom_type := init_rom;
+    signal rom      : rom_type := init_rom_hex(MEM_FILE);
     signal data_reg : std_logic_vector(63 downto 0) := (others => '0');
-
-    -- Synthesis attribute: initialize from memory file
-    attribute ram_init_file : string;
-    attribute ram_init_file of rom : signal is MEM_FILE;
 
 begin
 

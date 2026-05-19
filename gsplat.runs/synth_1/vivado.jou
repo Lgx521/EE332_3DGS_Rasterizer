@@ -2,8 +2,8 @@
 # Vivado v2017.4 (64-bit)
 # SW Build 2086221 on Fri Dec 15 20:55:39 MST 2017
 # IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
-# Start of session at: Mon May 18 13:46:54 2026
-# Process ID: 35144
+# Start of session at: Mon May 18 16:42:48 2026
+# Process ID: 12292
 # Current directory: C:/Users/Vincent G/Desktop/gsplat/gsplat.runs/synth_1
 # Command line: vivado.exe -log top_gsplat.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source top_gsplat.tcl
 # Log file: C:/Users/Vincent G/Desktop/gsplat/gsplat.runs/synth_1/top_gsplat.vds

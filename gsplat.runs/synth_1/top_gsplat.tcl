@@ -16,6 +16,7 @@ proc create_report { reportName command } {
     send_msg_id runtcl-5 warning "$msg"
   }
 }
+set_param xicom.use_bs_reader 1
 create_project -in_memory -part xc7a100tcsg324-1
 
 set_param project.singleFileAddWarning.threshold 0
@@ -35,17 +36,17 @@ read_mem {
   {C:/Users/Vincent G/Desktop/gsplat/gsplat.srcs/sources_1/imports/mem/my_scene.mem}
 }
 read_vhdl -library xil_defaultlib {
-  {C:/Users/Vincent G/Desktop/gsplat/src/alpha_blender.vhd}
+  {C:/Users/Vincent G/Desktop/gsplat/gsplat.srcs/sources_1/imports/src/alpha_blender.vhd}
   {C:/Users/Vincent G/Desktop/gsplat/gsplat.srcs/sources_1/imports/src/camera_controller.vhd}
-  {C:/Users/Vincent G/Desktop/gsplat/src/clk_gen.vhd}
-  {C:/Users/Vincent G/Desktop/gsplat/src/framebuffer.vhd}
-  {C:/Users/Vincent G/Desktop/gsplat/src/gaussian_lut.vhd}
-  {C:/Users/Vincent G/Desktop/gsplat/src/render_controller.vhd}
-  {C:/Users/Vincent G/Desktop/gsplat/src/splat_rasterizer.vhd}
-  {C:/Users/Vincent G/Desktop/gsplat/src/splat_rom.vhd}
-  {C:/Users/Vincent G/Desktop/gsplat/src/vga_timing.vhd}
-  {C:/Users/Vincent G/Desktop/gsplat/src/vga_controller.vhd}
-  {C:/Users/Vincent G/Desktop/gsplat/src/top_gsplat.vhd}
+  {C:/Users/Vincent G/Desktop/gsplat/gsplat.srcs/sources_1/imports/src/clk_gen.vhd}
+  {C:/Users/Vincent G/Desktop/gsplat/gsplat.srcs/sources_1/imports/src/framebuffer.vhd}
+  {C:/Users/Vincent G/Desktop/gsplat/gsplat.srcs/sources_1/imports/src/gaussian_lut.vhd}
+  {C:/Users/Vincent G/Desktop/gsplat/gsplat.srcs/sources_1/imports/src/render_controller.vhd}
+  {C:/Users/Vincent G/Desktop/gsplat/gsplat.srcs/sources_1/imports/src/splat_rasterizer.vhd}
+  {C:/Users/Vincent G/Desktop/gsplat/gsplat.srcs/sources_1/imports/src/splat_rom.vhd}
+  {C:/Users/Vincent G/Desktop/gsplat/gsplat.srcs/sources_1/imports/src/vga_timing.vhd}
+  {C:/Users/Vincent G/Desktop/gsplat/gsplat.srcs/sources_1/imports/src/vga_controller.vhd}
+  {C:/Users/Vincent G/Desktop/gsplat/gsplat.srcs/sources_1/imports/src/top_gsplat.vhd}
 }
 # Mark all dcp files as not used in implementation to prevent them from being
 # stitched into the results of this synthesis run. Any black boxes in the

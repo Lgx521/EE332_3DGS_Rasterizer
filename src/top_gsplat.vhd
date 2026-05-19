@@ -214,8 +214,8 @@ begin
     --=========================================================================
     u_splat_rom : entity work.splat_rom
     generic map (
-        NUM_SPLATS => 5,
-        MEM_FILE   => "cactus.mem"
+        NUM_SPLATS => 5000,
+        MEM_FILE   => "../../mem/cactus.mem"
     )
     port map (
         clk        => clk_sys,

@@ -126,6 +126,80 @@ def read_ply(filepath):
     }
 
 
+def quat_to_rotation(q):
+    """Quaternion [w,x,y,z] -> 3x3 rotation matrix (vectorised, q shape (N,4))."""
+    w, x, y, z = q[:, 0], q[:, 1], q[:, 2], q[:, 3]
+    R = np.stack([
+        1-2*(y*y+z*z),   2*(x*y-w*z),   2*(x*z+w*y),
+          2*(x*y+w*z), 1-2*(x*x+z*z),   2*(y*z-w*x),
+          2*(x*z-w*y),   2*(y*z+w*x), 1-2*(x*x+y*y)
+    ], axis=-1).reshape(-1, 3, 3)
+    return R  # (N, 3, 3)
+
+
+def compute_2d_radii(pos, scales_log, quats, view, K):
+    """
+    Compute proper 2D projected radius for each Gaussian using full 3DGS math.
+    Returns r_major (pixels) for each Gaussian.
+
+    Steps per Gaussian:
+      1. Build 3D covariance: Sigma3d = R * diag(s^2) * R^T
+      2. Project to 2D:  Sigma2d = J * W * Sigma3d * W^T * J^T
+         where J = perspective Jacobian, W = view rotation
+      3. max eigenvalue of Sigma2d -> radius = 3*sqrt(lambda_max)
+    """
+    n = len(pos)
+    # Normalise quaternions and build rotation matrices (N,3,3)
+    q = quats / np.linalg.norm(quats, axis=1, keepdims=True)
+    R = quat_to_rotation(q)  # (N,3,3)
+    s = np.exp(scales_log)   # (N,3)
+
+    # 3D covariance: Sigma3d = R * diag(s^2) * R^T  (N,3,3)
+    RS = R * s[:, None, :]           # (N,3,3) each column scaled
+    Sigma3d = RS @ RS.transpose(0, 2, 1)  # (N,3,3)
+
+    # Camera-space positions
+    ones = np.ones((n, 1))
+    p_world = np.hstack([pos, ones])              # (N,4)
+    p_cam   = (view @ p_world.T).T                # (N,4)
+    z = p_cam[:, 2]                               # (N,) negative in front
+
+    fx, fy = K[0, 0], K[1, 1]
+    tx, ty = p_cam[:, 0], p_cam[:, 1]
+
+    # Perspective Jacobian J per Gaussian (N,2,3)
+    J = np.zeros((n, 2, 3))
+    J[:, 0, 0] = fx / z
+    J[:, 0, 2] = -fx * tx / (z * z)
+    J[:, 1, 1] = fy / z
+    J[:, 1, 2] = -fy * ty / (z * z)
+
+    # View rotation (3x3)
+    W = view[:3, :3]  # (3,3)
+
+    # T = J * W  (N,2,3)
+    T = J @ W[None, :, :]  # (N,2,3)
+
+    # 2D covariance Sigma2d = T * Sigma3d * T^T  (N,2,2)
+    Sigma2d = T @ Sigma3d @ T.transpose(0, 2, 1)  # (N,2,2)
+    # Add small regularisation (anti-aliasing low-pass filter)
+    Sigma2d[:, 0, 0] += 0.3
+    Sigma2d[:, 1, 1] += 0.3
+
+    # Max eigenvalue via trace/det formula for 2x2
+    a  = Sigma2d[:, 0, 0]
+    d  = Sigma2d[:, 1, 1]
+    b  = Sigma2d[:, 0, 1]
+    tr = a + d
+    det = a * d - b * b
+    disc = np.sqrt(np.maximum(tr * tr / 4 - det, 0))
+    lam_max = tr / 2 + disc  # larger eigenvalue
+
+    # 3-sigma radius in pixels
+    r_major = 3.0 * np.sqrt(np.maximum(lam_max, 0))
+    return r_major  # (N,)
+
+
 def sh_dc_to_rgb(sh_dc):
     """Convert SH degree-0 DC component to RGB [0,1]."""
     # SH DC normalization constant: C0 = 0.28209479177
@@ -177,70 +251,83 @@ def build_camera_matrix(cam_pos, cam_target, cam_up=None, fov_y=60.0):
     return view, K
 
 
-def project_gaussians(gaussians, view, K, max_splats=5000):
+def project_gaussians(gaussians, view, K, max_splats=5000,
+                      radius_scale=1.0, min_opacity=0.05, alpha_scale=1.0):
     """
     Project 3D Gaussians to 2D splats.
+    Uses proper 2D covariance projection (full 3DGS math) for accurate radii.
+    Filters by visual importance (opacity * radius^2).
     Returns list of (cx, cy, radius, r, g, b, alpha, depth).
     """
     pos = gaussians['positions']
     scales = gaussians['scales']
+    rotations = gaussians['rotations']
     opacities = gaussians['opacities']
     sh_dc = gaussians['sh_dc']
-    n = gaussians['count']
 
     # Compute activated opacity
     opacity_activated = sigmoid(opacities)
 
-    # Filter by opacity: keep top max_splats
-    indices = np.argsort(-opacity_activated)
-    if len(indices) > max_splats:
-        indices = indices[:max_splats]
-    print(f"Filtered to {len(indices)} splats (opacity range: "
-          f"{opacity_activated[indices[-1]]:.3f} - {opacity_activated[indices[0]]:.3f})")
+    # Pre-filter: drop nearly transparent gaussians
+    keep = opacity_activated >= min_opacity
+    pos = pos[keep]; scales = scales[keep]
+    rotations = rotations[keep]
+    opacity_activated = opacity_activated[keep]; sh_dc = sh_dc[keep]
+    print(f"After opacity pre-filter (>= {min_opacity}): {len(opacity_activated)} gaussians")
 
     # Convert SH to RGB
     rgb = sh_dc_to_rgb(sh_dc)
 
+    # Project all remaining gaussians to screen
+    n = len(opacity_activated)
+    # Batch transform to camera space
+    ones = np.ones((n, 1))
+    p_world = np.hstack([pos, ones])          # (N, 4)
+    p_cam = (view @ p_world.T).T              # (N, 4)
+    depths = -p_cam[:, 2]                     # positive in front of camera
+
+    # Vectorised screen projection
+    valid = depths > 0.1
+    safe_d = np.where(valid, depths, 1.0)
+    cx_arr = np.where(valid, K[0, 0] * p_cam[:, 0] / safe_d + K[0, 2], -9999)
+    cy_arr = np.where(valid, K[1, 1] * p_cam[:, 1] / safe_d + K[1, 2], -9999)
+
+    # Proper 2D covariance radius (3-sigma of projected Gaussian)
+    print("Computing 2D covariance projection...")
+    r2d = compute_2d_radii(pos, scales, rotations, view, K)  # (N,)
+    radius_arr = np.where(valid, r2d * radius_scale, 0)
+    radius_arr = np.maximum(radius_arr, 1.0)  # at least 1 pixel
+
+    # On-screen mask
+    on_screen = (valid
+                 & (cx_arr >= -radius_arr) & (cx_arr <= SCREEN_W + radius_arr)
+                 & (cy_arr >= -radius_arr) & (cy_arr <= SCREEN_H + radius_arr))
+
+    # Visual importance: opacity * pixel area covered
+    importance = opacity_activated * (radius_arr ** 2)
+    importance = np.where(on_screen, importance, 0.0)
+
+    # Keep top max_splats by importance
+    top_idx = np.argsort(-importance)
+    if max_splats < n:
+        top_idx = top_idx[:max_splats]
+    top_idx = top_idx[on_screen[top_idx]]
+
     splats = []
-    for idx in indices:
-        # Transform to camera space
-        p_world = np.append(pos[idx], 1.0)
-        p_cam = view @ p_world
+    for i in top_idx:
+        r_out, g_out, b_out = rgb[i]
+        a_out = min(float(opacity_activated[i]) * alpha_scale, 1.0)
+        splats.append((
+            float(cx_arr[i]), float(cy_arr[i]), float(radius_arr[i]),
+            float(r_out), float(g_out), float(b_out),
+            a_out, float(depths[i])
+        ))
 
-        # Skip if behind camera
-        if p_cam[2] >= -0.1:
-            continue
-
-        depth = -p_cam[2]
-
-        # Project to screen
-        cx = K[0, 0] * p_cam[0] / depth + K[0, 2]
-        cy = K[1, 1] * p_cam[1] / depth + K[1, 2]
-
-        # Compute approximate radius from scale
-        # Use max scale component, projected
-        scale = np.exp(scales[idx])  # 3DGS stores log-scale
-        max_scale = np.max(scale)
-        # Project scale to screen pixels
-        radius = max_scale * K[0, 0] / depth
-
-        # Skip if off-screen (with margin)
-        if cx < -radius or cx > SCREEN_W + radius:
-            continue
-        if cy < -radius or cy > SCREEN_H + radius:
-            continue
-
-        # Skip tiny splats
-        if radius < 1:
-            radius = 1
-
-        # Get color and opacity
-        r, g, b = rgb[idx]
-        alpha = opacity_activated[idx]
-
-        splats.append((cx, cy, radius, r, g, b, alpha, depth))
-
-    print(f"Projected {len(splats)} visible splats")
+    print(f"Selected {len(splats)} splats by importance "
+          f"(radius_scale={radius_scale:.1f})")
+    if splats:
+        radii = [s[2] for s in splats]
+        print(f"  radius: min={min(radii):.1f}  mean={sum(radii)/len(radii):.1f}  max={max(radii):.1f}")
     return splats
 
 
@@ -294,6 +381,12 @@ def main():
                         help='Output .mem file')
     parser.add_argument('--max-splats', type=int, default=5000,
                         help='Maximum number of splats to keep')
+    parser.add_argument('--radius-scale', type=float, default=1.0,
+                        help='Multiply projected radius by this factor (default 1.0, proper 2D cov used)')
+    parser.add_argument('--min-opacity', type=float, default=0.05,
+                        help='Discard gaussians below this opacity (default 0.05)')
+    parser.add_argument('--alpha-scale', type=float, default=1.0,
+                        help='Multiply opacity by this factor before quantising (default 1.0)')
     parser.add_argument('--cam-pos', default='0,0,3',
                         help='Camera position (x,y,z)')
     parser.add_argument('--cam-target', default='0,0,0',
@@ -320,7 +413,11 @@ def main():
     view, K = build_camera_matrix(cam_pos, cam_target, fov_y=args.fov)
 
     # Project
-    splats = project_gaussians(gaussians, view, K, max_splats=args.max_splats)
+    splats = project_gaussians(gaussians, view, K,
+                               max_splats=args.max_splats,
+                               radius_scale=args.radius_scale,
+                               min_opacity=args.min_opacity,
+                               alpha_scale=args.alpha_scale)
 
     # Quantize and sort
     packed = quantize_and_sort(splats)
